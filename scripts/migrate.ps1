@@ -1,0 +1,1 @@
+migrate -path migrations -database "sqlite://./data/habits.db" $args
