@@ -20,7 +20,7 @@ resolver:
   filename_template: "{name}.resolvers.go"
 
 autobind:
-  - "Go-Gin-SQLite-Habit-Streak-GraphQL-API/internal/models"
+  - "habit-streak-tracker/internal/models"
 
 models:
   ID:
