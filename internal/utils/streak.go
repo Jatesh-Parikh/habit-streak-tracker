@@ -38,3 +38,37 @@ func CalculateCurrentStreak(logs []*models.HabitLog) int {
 
 	return streak
 }
+
+func CalculateLongestStreak(logs []*models.HabitLog) int {
+	if len(logs) == 0 {
+		return 0
+	}
+
+	for i, j := 0, len(logs)-1; i < j; i, j = i+1, j-1 {
+		logs[i], logs[j] = logs[j], logs[i]
+	}
+
+	currentRun := 1
+	longestRun := 1
+
+	prevDate := logs[0].CompletedDate.UTC().Truncate(24 * time.Hour)
+
+	for i := 1; i < len(logs); i++ {
+		logDate := logs[i].CompletedDate.UTC().Truncate(24 * time.Hour)
+		expectedDate := prevDate.AddDate(0, 0, 1)
+
+		if logDate.Equal(expectedDate) {
+			currentRun++
+
+			if currentRun > longestRun {
+				longestRun = currentRun
+			}
+		} else {
+			currentRun = 1
+		}
+
+		prevDate = logDate
+	}
+
+	return longestRun
+}
