@@ -1,0 +1,28 @@
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    habits: [Habit!]!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type Habit {
+    id: ID!
+    name: String!
+    description: String!
+    currentStreak: Int!
+    longestStreak: Int!
+    totalCompletions: Int!
+    logs: [HabitLog!]!
+    user: User!
+    createdAt: String!
+    updatedAt: String!
+}
+
+type HabitLog {
+    id: ID!
+    habit: Habit!
+    completedDate: String!
+    createdAt: String!
+}
