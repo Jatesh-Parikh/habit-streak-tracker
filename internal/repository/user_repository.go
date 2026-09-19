@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"habit-streak-tracker/internal/models"
 
-	// "errors"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -52,6 +52,28 @@ func (r *UserRepository) CreateUser(name string, email string, hashedPassword st
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to retrieve created user: %w", err)
+	}
+
+	return &user, nil
+}
+
+func (r *UserRepository) GetUserByEmail(email string) (*models.User, error) {
+	var user models.User
+	err := r.DB.QueryRow("SELECT id, name, email, password, created_at, updated_at FROM users WHERE email = ?", email).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Email,
+		&user.Password,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, fmt.Errorf("Invalid email or password")
+		}
+
+		return nil, fmt.Errorf("Failed to find user: %w", err)
 	}
 
 	return &user, nil
