@@ -3,6 +3,8 @@ package utils
 import (
 	"errors"
 	"unicode"
+
+	"golang.org/x/crypto/bcrypt"
 	// "golang.org/x/crypto/bcrypt"
 )
 
@@ -51,4 +53,20 @@ func ValidatePasswordStrength(password string) error {
 	}
 
 	return nil
+}
+
+func HashPassword(password string) (string, error) {
+	passwordBytes := []byte(password)
+
+	hashedBytes, err := bcrypt.GenerateFromPassword(passwordBytes, 12)
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(hashedBytes), nil
+}
+
+func ComparePassword(hashedPassword string, plainPassword string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(plainPassword))
 }
