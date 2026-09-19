@@ -26,3 +26,30 @@ type HabitLog {
     completedDate: String!
     createdAt: String!
 }
+
+type AuthPayload {
+    token: String!
+    user: User!
+}
+
+type Query {
+    me: User
+    habits: [Habit!]!
+    habit(id: ID!): Habit
+    habitLogs(habitId: ID!): [HabitLog!]! 
+}
+
+type Mutation {
+    register(name: String!, email: String!, password: String!): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
+
+    updateUser(name: String, email: String, password: String): User!
+    deleteUser: Boolean!
+
+    createHabit(name: String!, description: String!): Habit!
+    updateHabit(id: ID!, name: String, description: String): Habit!
+    deleteHabit(id: ID!): Boolean!
+
+    checkInHabit(habitId: ID!, date: String): HabitLog!
+    deleteHabitLog(id: ID!): Boolean!
+}
