@@ -146,3 +146,23 @@ func (r *UserRepository) UpdateUser(id string, name *string, email *string, pass
 
 	return r.GetUserByID(id)
 }
+
+func (r *UserRepository) DeleteUser(id string) (bool, error) {
+	result, err := r.DB.Exec("DELETE FROM users WHERE id = ?", id)
+
+	if err != nil {
+		return false, fmt.Errorf("Failed to delete the user: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return false, fmt.Errorf("Failed to confirm deletion: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
