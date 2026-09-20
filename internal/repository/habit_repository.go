@@ -180,3 +180,26 @@ func (r *HabitRepository) DeleteHabit(habitID string, userID string) (bool, erro
 
 	return true, nil
 }
+
+func (r *HabitRepository) GetHabitByID(id string) (*models.Habit, error) {
+	var habit models.Habit
+
+	err := r.DB.QueryRow("SELECT id, user_id, name, description, created_at, updated_at FROM habits WHERE id = ?", id).Scan(
+		&habit.ID,
+		&habit.UserID,
+		&habit.Name,
+		&habit.Description,
+		&habit.CreatedAt,
+		&habit.UpdatedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("Failed to fetch habit: %w", err)
+	}
+
+	return &habit, nil
+}
