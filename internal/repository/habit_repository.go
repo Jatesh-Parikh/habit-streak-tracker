@@ -52,3 +52,40 @@ func (r *HabitRepository) CreateHabit(userID string, name string, description st
 
 	return &habit, nil
 }
+
+func (r *HabitRepository) GetHabitsByUserID(userID string) ([]*models.Habit, error) {
+	rows, err := r.DB.Query("SELECT id, user_id, name, description, created_at, updated_at FROM habits WHERE user_id = ? ORDER BY created_at DESC", userID)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to fetch habits: %w", err)
+	}
+
+	defer rows.Close()
+
+	habits := make([]*models.Habit, 0)
+
+	for rows.Next() {
+		var habit models.Habit
+
+		err := rows.Scan(
+			&habit.ID,
+			&habit.UserID,
+			&habit.Name,
+			&habit.Description,
+			&habit.CreatedAt,
+			&habit.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to scan habit: %w", err)
+		}
+
+		habits = append(habits, &habit)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("Error iterating habits: %w", err)
+	}
+
+	return habits, nil
+}
