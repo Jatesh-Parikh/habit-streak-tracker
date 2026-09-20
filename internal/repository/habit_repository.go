@@ -2,12 +2,10 @@ package repository
 
 import (
 	"database/sql"
-	"habit-streak-tracker/internal/models"
-	"strings"
-
 	"errors"
 	"fmt"
-
+	"habit-streak-tracker/internal/models"
+	"strings"
 	"time"
 )
 
@@ -155,4 +153,30 @@ func (r *HabitRepository) UpdateHabit(habitID string, userID string, name *strin
 	}
 
 	return r.GetHabitWithUserCheck(habitID, userID)
+}
+
+func (r *HabitRepository) DeleteHabit(habitID string, userID string) (bool, error) {
+	_, err := r.GetHabitWithUserCheck(habitID, userID)
+
+	if err != nil {
+		return false, err
+	}
+
+	result, err := r.DB.Exec("DELETE FROM habits WHERE id = ?", habitID)
+
+	if err != nil {
+		return false, fmt.Errorf("Failed to delete habit: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return false, fmt.Errorf("Failed to confirm deletion: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return false, nil
+	}
+
+	return true, nil
 }
