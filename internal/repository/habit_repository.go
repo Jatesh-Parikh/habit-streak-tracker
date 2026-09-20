@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"habit-streak-tracker/internal/models"
 
-	// "errors"
+	"errors"
 	"fmt"
+
 	// "strings"
 	"time"
 )
@@ -88,4 +89,27 @@ func (r *HabitRepository) GetHabitsByUserID(userID string) ([]*models.Habit, err
 	}
 
 	return habits, nil
+}
+
+func (r *HabitRepository) GetHabitWithUserCheck(habitID string, userID string) (*models.Habit, error) {
+	var habit models.Habit
+
+	err := r.DB.QueryRow("SELECT id, user_id, name, description, created_at, updated_at FROM habits WHERE id = ? AND user_id = ?", habitID, userID).Scan(
+		&habit.ID,
+		&habit.UserID,
+		&habit.Name,
+		&habit.Description,
+		&habit.CreatedAt,
+		&habit.UpdatedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, fmt.Errorf("Habit not found")
+		}
+
+		return nil, fmt.Errorf("Failed to fetch habit: %w", err)
+	}
+
+	return &habit, nil
 }
