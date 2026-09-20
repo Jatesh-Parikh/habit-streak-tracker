@@ -3,11 +3,11 @@ package repository
 import (
 	"database/sql"
 	"habit-streak-tracker/internal/models"
+	"strings"
 
 	"errors"
 	"fmt"
 
-	// "strings"
 	"time"
 )
 
@@ -112,4 +112,47 @@ func (r *HabitRepository) GetHabitWithUserCheck(habitID string, userID string) (
 	}
 
 	return &habit, nil
+}
+
+func (r *HabitRepository) UpdateHabit(habitID string, userID string, name *string, description *string) (*models.Habit, error) {
+	_, err := r.GetHabitWithUserCheck(habitID, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var setClauses []string
+
+	var args []interface{}
+
+	if name != nil {
+		setClauses = append(setClauses, "name = ?")
+		args = append(args, *name)
+	}
+
+	if description != nil {
+		setClauses = append(setClauses, "description = ?")
+		args = append(args, *description)
+	}
+
+	if len(setClauses) == 0 {
+		return nil, fmt.Errorf("No fields provided to update")
+	}
+
+	now := time.Now()
+	setClauses = append(setClauses, "updated_at = ?")
+	args = append(args, now)
+
+	setClause := strings.Join(setClauses, ", ")
+
+	query := fmt.Sprintf("UPDATE habits SET %s WHERE id = ?", setClause)
+	args = append(args, habitID)
+
+	_, err = r.DB.Exec(query, args...)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to update habit: %w", err)
+	}
+
+	return r.GetHabitWithUserCheck(habitID, userID)
 }
