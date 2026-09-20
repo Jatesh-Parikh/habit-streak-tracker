@@ -1,11 +1,12 @@
 package repository
 
 import (
-	// "habit-streak-tracker/internal/models"
 	"database/sql"
+	"habit-streak-tracker/internal/models"
+
 	// "errors"
 	"fmt"
-	// "strings"
+	"strings"
 	"time"
 )
 
@@ -29,4 +30,44 @@ func (r *HabitLogRepository) CheckDuplicateLog(habitID string, completedDate tim
 	}
 
 	return count > 0, nil
+}
+
+func (r *HabitLogRepository) CreateHabitLog(habitID string, completedDate time.Time) (*models.HabitLog, error) {
+	now := time.Now()
+
+	truncated := completedDate.UTC().Truncate(24 * time.Hour)
+	dateStr := truncated.Format("2006-01-02")
+
+	var id string
+
+	err := r.DB.QueryRow("SELECT lower(hex(randomblob(16)))").Scan(&id)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate log ID: %w", err)
+	}
+
+	_, err = r.DB.Exec("INSERT INTO habit_logs (id, habit_id, completed_date, created_at) VALUES (?, ?, ?, ?)", id, habitID, dateStr, now)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return nil, fmt.Errorf("You have already checked in for this habit today or on this date")
+		}
+
+		return nil, fmt.Errorf("Failed to create habit: %w", err)
+	}
+
+	var log models.HabitLog
+
+	err = r.DB.QueryRow("SELECT id, habit_id, completed_date, created_at FROM habit_logs WHERE id = ?", id).Scan(
+		&log.ID,
+		&log.HabitID,
+		&log.CompletedDate,
+		&log.CreatedAt,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to retrieve created log: %w", err)
+	}
+
+	return &log, nil
 }
