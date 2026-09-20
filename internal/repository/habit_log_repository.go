@@ -71,3 +71,38 @@ func (r *HabitLogRepository) CreateHabitLog(habitID string, completedDate time.T
 
 	return &log, nil
 }
+
+func (r *HabitLogRepository) GetHabitLogsByHabitID(habitID string) ([]*models.HabitLog, error) {
+	rows, err := r.DB.Query("SELECT id, habit_id, completed_date, created_at FROM habit_logs WHERE habit_id = ? ORDER BY completed_date DESC", habitID)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to fetch habit logs: %w", err)
+	}
+
+	defer rows.Close()
+
+	logs := make([]*models.HabitLog, 0)
+
+	for rows.Next() {
+		var log models.HabitLog
+
+		err := rows.Scan(
+			&log.ID,
+			&log.HabitID,
+			&log.CompletedDate,
+			&log.CreatedAt,
+		)
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to scan habit log: %w", err)
+		}
+
+		logs = append(logs, &log)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("Error iterating habit logs: %w", err)
+	}
+
+	return logs, nil
+}
