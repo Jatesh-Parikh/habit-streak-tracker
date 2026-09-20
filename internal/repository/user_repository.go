@@ -100,3 +100,49 @@ func (r *UserRepository) GetUserByID(id string) (*models.User, error) {
 
 	return &user, nil
 }
+
+func (r *UserRepository) UpdateUser(id string, name *string, email *string, password *string) (*models.User, error) {
+	var setClauses []string
+
+	var args []interface{}
+
+	if name != nil {
+		setClauses = append(setClauses, "name = ?")
+		args = append(args, *name)
+	}
+
+	if email != nil {
+		setClauses = append(setClauses, "email = ?")
+		args = append(args, *email)
+	}
+
+	if password != nil {
+		setClauses = append(setClauses, "password = ?")
+		args = append(args, *password)
+	}
+
+	if len(setClauses) == 0 {
+		return nil, fmt.Errorf("No fields provided to update")
+	}
+
+	now := time.Now()
+	setClauses = append(setClauses, "updated_at = ?")
+	args = append(args, now)
+
+	setClause := strings.Join(setClauses, ", ")
+
+	query := fmt.Sprintf("UPDATE users SET %s WHERE id = ?", setClause)
+	args = append(args, id)
+
+	_, err := r.DB.Exec(query, args...)
+
+	if err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return nil, fmt.Errorf("Email already in use")
+		}
+
+		return nil, fmt.Errorf("Failed to update user: %w", err)
+	}
+
+	return r.GetUserByID(id)
+}
