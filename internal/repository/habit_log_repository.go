@@ -2,10 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"habit-streak-tracker/internal/models"
-
-	// "errors"
+	"errors"
 	"fmt"
+	"habit-streak-tracker/internal/models"
 	"strings"
 	"time"
 )
@@ -105,4 +104,25 @@ func (r *HabitLogRepository) GetHabitLogsByHabitID(habitID string) ([]*models.Ha
 	}
 
 	return logs, nil
+}
+
+func (r *HabitLogRepository) GetHabitLogByID(id string) (*models.HabitLog, error) {
+	var log models.HabitLog
+
+	err := r.DB.QueryRow("SELECT id, habit_id, completed_date, created_at FROM habit_logs WHERE id = ?", id).Scan(
+		&log.ID,
+		&log.HabitID,
+		&log.CompletedDate,
+		&log.CreatedAt,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+
+		return nil, fmt.Errorf("Failed to fetch habit log: %w", err)
+	}
+
+	return &log, nil
 }
