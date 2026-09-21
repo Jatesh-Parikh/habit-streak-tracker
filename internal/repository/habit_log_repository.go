@@ -126,3 +126,23 @@ func (r *HabitLogRepository) GetHabitLogByID(id string) (*models.HabitLog, error
 
 	return &log, nil
 }
+
+func (r *HabitLogRepository) DeleteHabitLog(id string) (bool, error) {
+	result, err := r.DB.Exec("DELETE FROM habit_logs WHERE id = ?", id)
+
+	if err != nil {
+		return false, fmt.Errorf("Failed to delete habit log: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+
+	if err != nil {
+		return false, fmt.Errorf("Failed to confirm deletion: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
