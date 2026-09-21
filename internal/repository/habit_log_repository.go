@@ -146,3 +146,15 @@ func (r *HabitLogRepository) DeleteHabitLog(id string) (bool, error) {
 
 	return true, nil
 }
+
+func (r *HabitLogRepository) CountTotalCompletions(habitID string) (int, error) {
+	var count int
+
+	err := r.DB.QueryRow("SELECT COUNT(*) FROM habit_logs WHERE habit_id = ?", habitID).Scan(&count)
+
+	if err != nil {
+		return 0, fmt.Errorf("Failed to count completions: %w", err)
+	}
+
+	return count, nil
+}
