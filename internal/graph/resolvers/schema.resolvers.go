@@ -127,11 +127,6 @@ func (r *queryResolver) HabitLogs(ctx context.Context, habitID string) ([]*model
 	panic(fmt.Errorf("not implemented: HabitLogs - habitLogs"))
 }
 
-// Habits is the resolver for the habits field.
-func (r *userResolver) Habits(ctx context.Context, obj *models.User) ([]*models.Habit, error) {
-	panic(fmt.Errorf("not implemented: Habits - habits"))
-}
-
 // Habit returns generated.HabitResolver implementation.
 func (r *Resolver) Habit() generated.HabitResolver { return &habitResolver{r} }
 
