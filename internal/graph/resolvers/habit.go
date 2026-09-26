@@ -29,3 +29,13 @@ func (r *habitResolver) User(ctx context.Context, obj *models.Habit) (*models.Us
 
 	return user, nil
 }
+
+func (r *habitResolver) Logs(ctx context.Context, obj *models.Habit) ([]*models.HabitLog, error) {
+	logs, err := r.HabitLogRepo.GetHabitLogsByHabitID(obj.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return logs, nil
+}

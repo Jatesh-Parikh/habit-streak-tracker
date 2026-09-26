@@ -27,11 +27,6 @@ func (r *habitResolver) TotalCompletions(ctx context.Context, obj *models.Habit)
 	panic(fmt.Errorf("not implemented: TotalCompletions - totalCompletions"))
 }
 
-// Logs is the resolver for the logs field.
-func (r *habitResolver) Logs(ctx context.Context, obj *models.Habit) ([]*models.HabitLog, error) {
-	panic(fmt.Errorf("not implemented: Logs - logs"))
-}
-
 // Habit is the resolver for the habit field.
 func (r *habitLogResolver) Habit(ctx context.Context, obj *models.HabitLog) (*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: Habit - habit"))
