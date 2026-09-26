@@ -57,11 +57,6 @@ func (r *mutationResolver) DeleteHabitLog(ctx context.Context, id string) (bool,
 	panic(fmt.Errorf("not implemented: DeleteHabitLog - deleteHabitLog"))
 }
 
-// Me is the resolver for the me field.
-func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {
-	panic(fmt.Errorf("not implemented: Me - me"))
-}
-
 // Habits is the resolver for the habits field.
 func (r *queryResolver) Habits(ctx context.Context) ([]*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: Habits - habits"))
