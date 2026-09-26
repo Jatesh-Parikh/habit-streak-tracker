@@ -1,10 +1,10 @@
 package resolvers
 
 import (
-	"habit-streak-tracker/internal/models"
-	// "habit-streak-tracker/internal/utils"
 	"context"
 	"fmt"
+	"habit-streak-tracker/internal/models"
+	"habit-streak-tracker/internal/utils"
 	"time"
 )
 
@@ -46,6 +46,18 @@ func (r *habitResolver) TotalCompletions(ctx context.Context, obj *models.Habit)
 	if err != nil {
 		return 0, err
 	}
+
+	return int32(count), nil
+}
+
+func (r *habitResolver) CurrentStreak(ctx context.Context, obj *models.Habit) (int32, error) {
+	logs, err := r.HabitLogRepo.GetHabitLogsByHabitID(obj.ID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	count := utils.CalculateCurrentStreak(logs)
 
 	return int32(count), nil
 }
