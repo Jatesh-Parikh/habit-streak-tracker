@@ -32,11 +32,6 @@ func (r *habitResolver) Logs(ctx context.Context, obj *models.Habit) ([]*models.
 	panic(fmt.Errorf("not implemented: Logs - logs"))
 }
 
-// User is the resolver for the user field.
-func (r *habitResolver) User(ctx context.Context, obj *models.Habit) (*models.User, error) {
-	panic(fmt.Errorf("not implemented: User - user"))
-}
-
 // Habit is the resolver for the habit field.
 func (r *habitLogResolver) Habit(ctx context.Context, obj *models.HabitLog) (*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: Habit - habit"))
