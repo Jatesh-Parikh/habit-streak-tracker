@@ -12,11 +12,6 @@ import (
 	"habit-streak-tracker/internal/models"
 )
 
-// LongestStreak is the resolver for the longestStreak field.
-func (r *habitResolver) LongestStreak(ctx context.Context, obj *models.Habit) (int32, error) {
-	panic(fmt.Errorf("not implemented: LongestStreak - longestStreak"))
-}
-
 // Habit is the resolver for the habit field.
 func (r *habitLogResolver) Habit(ctx context.Context, obj *models.HabitLog) (*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: Habit - habit"))

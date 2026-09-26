@@ -61,3 +61,15 @@ func (r *habitResolver) CurrentStreak(ctx context.Context, obj *models.Habit) (i
 
 	return int32(count), nil
 }
+
+func (r *habitResolver) LongestStreak(ctx context.Context, obj *models.Habit) (int32, error) {
+	logs, err := r.HabitLogRepo.GetHabitLogsByHabitID(obj.ID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	count := utils.CalculateLongestStreak(logs)
+
+	return int32(count), nil
+}
