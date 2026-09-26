@@ -17,16 +17,6 @@ func (r *habitLogResolver) Habit(ctx context.Context, obj *models.HabitLog) (*mo
 	panic(fmt.Errorf("not implemented: Habit - habit"))
 }
 
-// CompletedDate is the resolver for the completedDate field.
-func (r *habitLogResolver) CompletedDate(ctx context.Context, obj *models.HabitLog) (string, error) {
-	panic(fmt.Errorf("not implemented: CompletedDate - completedDate"))
-}
-
-// CreatedAt is the resolver for the createdAt field.
-func (r *habitLogResolver) CreatedAt(ctx context.Context, obj *models.HabitLog) (string, error) {
-	panic(fmt.Errorf("not implemented: CreatedAt - createdAt"))
-}
-
 // Register is the resolver for the register field.
 func (r *mutationResolver) Register(ctx context.Context, name string, email string, password string) (*models.AuthPayload, error) {
 	panic(fmt.Errorf("not implemented: Register - register"))
