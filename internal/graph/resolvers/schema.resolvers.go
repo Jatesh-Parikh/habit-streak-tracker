@@ -22,11 +22,6 @@ func (r *habitResolver) LongestStreak(ctx context.Context, obj *models.Habit) (i
 	panic(fmt.Errorf("not implemented: LongestStreak - longestStreak"))
 }
 
-// TotalCompletions is the resolver for the totalCompletions field.
-func (r *habitResolver) TotalCompletions(ctx context.Context, obj *models.Habit) (int32, error) {
-	panic(fmt.Errorf("not implemented: TotalCompletions - totalCompletions"))
-}
-
 // Habit is the resolver for the habit field.
 func (r *habitLogResolver) Habit(ctx context.Context, obj *models.HabitLog) (*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: Habit - habit"))

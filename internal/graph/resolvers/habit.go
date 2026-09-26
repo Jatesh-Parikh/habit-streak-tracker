@@ -39,3 +39,13 @@ func (r *habitResolver) Logs(ctx context.Context, obj *models.Habit) ([]*models.
 
 	return logs, nil
 }
+
+func (r *habitResolver) TotalCompletions(ctx context.Context, obj *models.Habit) (int32, error) {
+	count, err := r.HabitLogRepo.CountTotalCompletions(obj.ID)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int32(count), nil
+}
