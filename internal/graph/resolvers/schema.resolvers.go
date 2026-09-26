@@ -37,16 +37,6 @@ func (r *habitResolver) User(ctx context.Context, obj *models.Habit) (*models.Us
 	panic(fmt.Errorf("not implemented: User - user"))
 }
 
-// CreatedAt is the resolver for the createdAt field.
-func (r *habitResolver) CreatedAt(ctx context.Context, obj *models.Habit) (string, error) {
-	panic(fmt.Errorf("not implemented: CreatedAt - createdAt"))
-}
-
-// UpdatedAt is the resolver for the updatedAt field.
-func (r *habitResolver) UpdatedAt(ctx context.Context, obj *models.Habit) (string, error) {
-	panic(fmt.Errorf("not implemented: UpdatedAt - updatedAt"))
-}
-
 // Habit is the resolver for the habit field.
 func (r *habitLogResolver) Habit(ctx context.Context, obj *models.HabitLog) (*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: Habit - habit"))
