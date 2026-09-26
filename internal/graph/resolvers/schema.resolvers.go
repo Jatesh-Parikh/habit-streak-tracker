@@ -12,11 +12,6 @@ import (
 	"habit-streak-tracker/internal/models"
 )
 
-// Habit is the resolver for the habit field.
-func (r *habitLogResolver) Habit(ctx context.Context, obj *models.HabitLog) (*models.Habit, error) {
-	panic(fmt.Errorf("not implemented: Habit - habit"))
-}
-
 // Register is the resolver for the register field.
 func (r *mutationResolver) Register(ctx context.Context, name string, email string, password string) (*models.AuthPayload, error) {
 	panic(fmt.Errorf("not implemented: Register - register"))
