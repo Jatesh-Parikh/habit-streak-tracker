@@ -120,3 +120,23 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, name *string, email *
 
 	return user, nil
 }
+
+func (r *mutationResolver) DeleteUser(ctx context.Context) (bool, error) {
+	userID, ok := middleware.GetUserID(ctx)
+
+	if !ok {
+		return false, fmt.Errorf("Unauthorized")
+	}
+
+	deleted, err := r.UserRepo.DeleteUser(userID)
+
+	if err != nil {
+		return false, err
+	}
+
+	if !deleted {
+		return false, fmt.Errorf("User not found")
+	}
+
+	return true, nil
+}

@@ -12,11 +12,6 @@ import (
 	"habit-streak-tracker/internal/models"
 )
 
-// DeleteUser is the resolver for the deleteUser field.
-func (r *mutationResolver) DeleteUser(ctx context.Context) (bool, error) {
-	panic(fmt.Errorf("not implemented: DeleteUser - deleteUser"))
-}
-
 // CreateHabit is the resolver for the createHabit field.
 func (r *mutationResolver) CreateHabit(ctx context.Context, name string, description string) (*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: CreateHabit - createHabit"))
