@@ -12,11 +12,6 @@ import (
 	"habit-streak-tracker/internal/models"
 )
 
-// Login is the resolver for the login field.
-func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*models.AuthPayload, error) {
-	panic(fmt.Errorf("not implemented: Login - login"))
-}
-
 // UpdateUser is the resolver for the updateUser field.
 func (r *mutationResolver) UpdateUser(ctx context.Context, name *string, email *string, password *string) (*models.User, error) {
 	panic(fmt.Errorf("not implemented: UpdateUser - updateUser"))

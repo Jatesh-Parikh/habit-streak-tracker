@@ -50,3 +50,28 @@ func (r *mutationResolver) Register(ctx context.Context, name string, email stri
 		User:  user,
 	}, nil
 }
+
+func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*models.AuthPayload, error) {
+	user, err := r.UserRepo.GetUserByEmail(email)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = utils.ComparePassword(user.Password, password)
+
+	if err != nil {
+		return nil, fmt.Errorf("Invalid email or password")
+	}
+
+	token, err := utils.GenerateJWT(user.ID, os.Getenv("JWT_SECRET"))
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate token: %w", err)
+	}
+
+	return &models.AuthPayload{
+		Token: token,
+		User:  user,
+	}, nil
+}
