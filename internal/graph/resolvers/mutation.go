@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"habit-streak-tracker/internal/middleware"
 	"habit-streak-tracker/internal/models"
 	"habit-streak-tracker/internal/utils"
 	"os"
@@ -74,4 +75,48 @@ func (r *mutationResolver) Login(ctx context.Context, email string, password str
 		Token: token,
 		User:  user,
 	}, nil
+}
+
+func (r *mutationResolver) UpdateUser(ctx context.Context, name *string, email *string, password *string) (*models.User, error) {
+	userID, ok := middleware.GetUserID(ctx)
+
+	if !ok {
+		return nil, fmt.Errorf("Unauthorized")
+	}
+
+	if name != nil {
+		if err := utils.ValidateName(*name); err != nil {
+			return nil, fmt.Errorf("Invalid name: %w", err)
+		}
+	}
+
+	if email != nil {
+		if err := utils.ValidateEmail(*email); err != nil {
+			return nil, fmt.Errorf("Invalid email: %w", err)
+		}
+	}
+
+	var hashedPassword *string
+
+	if password != nil {
+		if err := utils.ValidatePasswordStrength(*password); err != nil {
+			return nil, fmt.Errorf("Invalid password: %w", err)
+		}
+
+		hash, err := utils.HashPassword(*password)
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to hash password: %w", err)
+		}
+
+		hashedPassword = &hash
+	}
+
+	user, err := r.UserRepo.UpdateUser(userID, name, email, hashedPassword)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
