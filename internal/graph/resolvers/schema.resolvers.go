@@ -12,11 +12,6 @@ import (
 	"habit-streak-tracker/internal/models"
 )
 
-// Register is the resolver for the register field.
-func (r *mutationResolver) Register(ctx context.Context, name string, email string, password string) (*models.AuthPayload, error) {
-	panic(fmt.Errorf("not implemented: Register - register"))
-}
-
 // Login is the resolver for the login field.
 func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*models.AuthPayload, error) {
 	panic(fmt.Errorf("not implemented: Login - login"))
