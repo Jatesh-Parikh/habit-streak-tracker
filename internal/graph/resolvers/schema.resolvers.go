@@ -9,13 +9,7 @@ import (
 	"context"
 	"fmt"
 	"habit-streak-tracker/internal/graph/generated"
-	"habit-streak-tracker/internal/models"
 )
-
-// CheckInHabit is the resolver for the checkInHabit field.
-func (r *mutationResolver) CheckInHabit(ctx context.Context, habitID string, date *string) (*models.HabitLog, error) {
-	panic(fmt.Errorf("not implemented: CheckInHabit - checkInHabit"))
-}
 
 // DeleteHabitLog is the resolver for the deleteHabitLog field.
 func (r *mutationResolver) DeleteHabitLog(ctx context.Context, id string) (bool, error) {

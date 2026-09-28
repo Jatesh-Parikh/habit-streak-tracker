@@ -7,6 +7,7 @@ import (
 	"habit-streak-tracker/internal/models"
 	"habit-streak-tracker/internal/utils"
 	"os"
+	"time"
 )
 
 func (r *mutationResolver) Register(ctx context.Context, name string, email string, password string) (*models.AuthPayload, error) {
@@ -211,4 +212,49 @@ func (r *mutationResolver) DeleteHabit(ctx context.Context, id string) (bool, er
 	}
 
 	return true, nil
+}
+
+func (r *mutationResolver) CheckInHabit(ctx context.Context, habitID string, date *string) (*models.HabitLog, error) {
+	userID, ok := middleware.GetUserID(ctx)
+
+	if !ok {
+		return nil, fmt.Errorf("Unauthorized")
+	}
+
+	var completedDate time.Time
+
+	if date == nil {
+		completedDate = time.Now().UTC()
+	} else {
+		var err error
+		completedDate, err = time.Parse("2026-01-02", *date)
+
+		if err != nil {
+			return nil, fmt.Errorf("Invalid Date Format - YYYY-MM-DD")
+		}
+	}
+
+	_, err := r.HabitRepo.GetHabitWithUserCheck(habitID, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	isDuplicate, err := r.HabitLogRepo.CheckDuplicateLog(habitID, completedDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if isDuplicate {
+		return nil, fmt.Errorf("You have already checked in for this habit today or on this date")
+	}
+
+	log, err := r.HabitLogRepo.CreateHabitLog(habitID, completedDate)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return log, nil
 }
