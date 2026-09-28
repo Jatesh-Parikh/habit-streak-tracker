@@ -258,3 +258,49 @@ func (r *mutationResolver) CheckInHabit(ctx context.Context, habitID string, dat
 
 	return log, nil
 }
+
+func (r *mutationResolver) DeleteHabitLog(ctx context.Context, id string) (bool, error) {
+	userID, ok := middleware.GetUserID(ctx)
+
+	if !ok {
+		return false, fmt.Errorf("Unauthorized")
+	}
+
+	// 1. Fetch the log entry to confirm it exists
+	log, err := r.HabitLogRepo.GetHabitLogByID(id)
+
+	if err != nil {
+		return false, err
+	}
+
+	if log == nil {
+		return false, fmt.Errorf("Habit log not found")
+	}
+
+	// 2. Fetch the parent habit
+	habit, err := r.HabitRepo.GetHabitWithUserCheck(log.HabitID, userID)
+
+	if err != nil {
+		return false, fmt.Errorf("Habit log not found")
+	}
+
+	if habit == nil {
+		return false, fmt.Errorf("Parent habit not found")
+	}
+
+	if habit.UserID != userID {
+		return false, fmt.Errorf("Unauthorized")
+	}
+
+	deleted, err := r.HabitLogRepo.DeleteHabitLog(id)
+
+	if err != nil {
+		return false, err
+	}
+
+	if !deleted {
+		return false, fmt.Errorf("Habit log not found")
+	}
+
+	return true, nil
+}
