@@ -164,3 +164,31 @@ func (r *mutationResolver) CreateHabit(ctx context.Context, name string, descrip
 
 	return habit, nil
 }
+
+func (r *mutationResolver) UpdateHabit(ctx context.Context, id string, name *string, description *string) (*models.Habit, error) {
+	userID, ok := middleware.GetUserID(ctx)
+
+	if !ok {
+		return nil, fmt.Errorf("Unauthorized")
+	}
+
+	if name != nil {
+		if err := utils.ValidateName(*name); err != nil {
+			return nil, fmt.Errorf("Invalid name: %w", err)
+		}
+	}
+
+	if description != nil {
+		if err := utils.ValidateDescription(*description); err != nil {
+			return nil, fmt.Errorf("Invalid description: %w", err)
+		}
+	}
+
+	habit, err := r.HabitRepo.UpdateHabit(id, userID, name, description)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return habit, nil
+}
