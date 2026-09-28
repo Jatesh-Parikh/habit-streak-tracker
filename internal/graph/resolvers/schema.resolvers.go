@@ -12,11 +12,6 @@ import (
 	"habit-streak-tracker/internal/models"
 )
 
-// CreateHabit is the resolver for the createHabit field.
-func (r *mutationResolver) CreateHabit(ctx context.Context, name string, description string) (*models.Habit, error) {
-	panic(fmt.Errorf("not implemented: CreateHabit - createHabit"))
-}
-
 // UpdateHabit is the resolver for the updateHabit field.
 func (r *mutationResolver) UpdateHabit(ctx context.Context, id string, name *string, description *string) (*models.Habit, error) {
 	panic(fmt.Errorf("not implemented: UpdateHabit - updateHabit"))
