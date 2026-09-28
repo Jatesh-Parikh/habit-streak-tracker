@@ -192,3 +192,23 @@ func (r *mutationResolver) UpdateHabit(ctx context.Context, id string, name *str
 
 	return habit, nil
 }
+
+func (r *mutationResolver) DeleteHabit(ctx context.Context, id string) (bool, error) {
+	userID, ok := middleware.GetUserID(ctx)
+
+	if !ok {
+		return false, fmt.Errorf("Unauthorized")
+	}
+
+	deleted, err := r.HabitRepo.DeleteHabit(id, userID)
+
+	if err != nil {
+		return false, err
+	}
+
+	if !deleted {
+		return false, fmt.Errorf("Habit not found")
+	}
+
+	return true, nil
+}
